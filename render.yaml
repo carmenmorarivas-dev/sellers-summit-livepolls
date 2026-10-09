@@ -1,18 +1,11 @@
 # Render deployment blueprint for Sellers Summit - LivePolls
-# A persistent disk keeps answers safe across restarts.
 services:
   - type: web
     name: sellers-summit-livepolls
     runtime: node
-    plan: starter          # always-on tier (~$7/mo). Change to "free" to use the sleeping free tier.
+    plan: starter
     buildCommand: npm install
     startCommand: npm start
     envVars:
-      - key: DB_PATH
-        value: /data/livepolls.json
       - key: PRESENTER_CODE
-        sync: false        # set your own secret passcode in the Render dashboard
-    disk:
-      name: livepolls-data
-      mountPath: /data
-      sizeGB: 1
+        sync: false
