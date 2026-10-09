@@ -1,0 +1,18 @@
+{
+  "name": "sellers-summit-livepolls",
+  "version": "1.0.0",
+  "description": "Live polling app - presenter screen with QR code, phone answers, live word cloud/list display",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "4.19.2",
+    "socket.io": "4.7.5",
+    "qrcode": "1.5.3",
+    "nanoid": "3.3.7"
+  }
+}

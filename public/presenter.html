@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sellers Summit - LivePolls | Presenter</title>
+<style>
+  :root {
+    --bg: #0f1222;
+    --panel: #171b32;
+    --accent: #6ee7ff;
+    --accent2: #ff6ec7;
+    --text: #f5f6fa;
+    --muted: #9aa0c3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #0f1222 0%, #1a1f3d 100%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .wrap {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 24px;
+    padding: 32px;
+    min-height: 100vh;
+  }
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .brand {
+    font-size: 15px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .question-card {
+    background: var(--panel);
+    border-radius: 20px;
+    padding: 36px 40px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+  }
+  .question-text {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  .status {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .status.live { color: #7CFC9A; }
+  .status.closed { color: #ff9d6e; }
+  .answers-card {
+    background: var(--panel);
+    border-radius: 20px;
+    padding: 28px 32px;
+    flex: 1;
+    min-height: 300px;
+    position: relative;
+    overflow: hidden;
+  }
+  .answers-title {
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+  }
+  #cloud {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 14px 20px;
+    min-height: 220px;
+  }
+  .word {
+    font-weight: 700;
+    color: var(--accent);
+    opacity: 0.95;
+    animation: pop 0.35s ease-out;
+  }
+  @keyframes pop {
+    from { transform: scale(0.6); opacity: 0; }
+    to { transform: scale(1); opacity: 0.95; }
+  }
+  #list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+  .list-item {
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1.05rem;
+    animation: slidein 0.3s ease-out;
+  }
+  @keyframes slidein {
+    from { transform: translateX(-10px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  .empty-hint {
+    color: var(--muted);
+    text-align: center;
+    margin-top: 60px;
+    font-size: 1.1rem;
+  }
+  .side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .panel {
+    background: var(--panel);
+    border-radius: 20px;
+    padding: 22px;
+  }
+  .panel h3 {
+    margin: 0 0 14px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+  }
+  #qrimg {
+    width: 100%;
+    border-radius: 12px;
+    background: #fff;
+    padding: 10px;
+  }
+  .join-url {
+    margin-top: 10px;
+    font-size: 1.05rem;
+    text-align: center;
+    color: var(--accent);
+    word-break: break-all;
+  }
+  textarea, input[type=text] {
+    width: 100%;
+    background: #0f1222;
+    border: 1px solid #2a2f55;
+    color: var(--text);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    resize: vertical;
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 8px;
+    width: 100%;
+  }
+  .btn-primary { background: var(--accent); color: #04131a; }
+  .btn-secondary { background: #2a2f55; color: var(--text); }
+  .btn-danger { background: #3a2238; color: #ff9ec7; }
+  .row { display: flex; gap: 8px; }
+  .row button { width: auto; flex: 1; }
+  .counter {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .toggle {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .toggle button {
+    margin-top: 0;
+    flex: 1;
+    background: #0f1222;
+    color: var(--muted);
+  }
+  .toggle button.active {
+    background: var(--accent);
+    color: #04131a;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="main">
+    <div class="header">
+      <div class="brand">Sellers Summit · LivePolls</div>
+      <div class="counter" id="answerCount">0 answers</div>
+    </div>
+    <div class="question-card">
+      <div class="question-text" id="questionText">Loading...</div>
+      <div class="status" id="statusText"></div>
+    </div>
+    <div class="answers-card">
+      <div class="answers-title">
+        <span>Live answers</span>
+      </div>
+      <div class="toggle">
+        <button id="viewCloudBtn" class="active">Word Cloud</button>
+        <button id="viewListBtn">List</button>
+      </div>
+      <div id="cloud"></div>
+      <div id="list" style="display:none;"></div>
+      <div class="empty-hint" id="emptyHint">No answers yet - scan the QR code to join!</div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="panel">
+      <h3>Scan to answer</h3>
+      <img id="qrimg" src="/api/qrcode" alt="QR code to join" />
+      <div class="join-url" id="joinUrl">loading…</div>
+    </div>
+    <div class="panel">
+      <h3>New question</h3>
+      <textarea id="newQuestion" rows="3" placeholder="Type a new question..."></textarea>
+      <button class="btn-primary" id="askBtn">Ask this question</button>
+    </div>
+    <div class="panel">
+      <h3>Controls</h3>
+      <div class="row">
+        <button class="btn-secondary" id="stopBtn">Stop answers</button>
+        <button class="btn-danger" id="clearBtn">Clear answers</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  let currentView = 'cloud';
+
+  fetch('/api/join-url').then(r => r.json()).then(d => {
+    document.getElementById('joinUrl').textContent = d.joinUrl;
+  });
+
+  function sizeFor(count, max) {
+    const minSize = 18, maxSize = 56;
+    if (max <= 1) return maxSize * 0.7;
+    const ratio = count / max;
+    return Math.round(minSize + ratio * (maxSize - minSize));
+  }
+
+  function render(state) {
+    document.getElementById('questionText').textContent = state.question;
+    const statusEl = document.getElementById('statusText');
+    if (state.active) {
+      statusEl.textContent = '● Accepting answers now';
+      statusEl.className = 'status live';
+    } else {
+      statusEl.textContent = '■ Answers closed for this question';
+      statusEl.className = 'status closed';
+    }
+    document.getElementById('answerCount').textContent = state.answers.length + ' answers';
+    document.getElementById('emptyHint').style.display = state.answers.length ? 'none' : 'block';
+
+    // Word cloud: tally identical (case-insensitive) short answers, otherwise show each.
+    const tally = {};
+    state.answers.forEach(a => {
+      const key = a.text.toLowerCase();
+      tally[key] = (tally[key] || 0) + 1;
+    });
+    const words = Object.entries(tally).map(([text, count]) => ({ text, count }));
+    const maxCount = Math.max(1, ...words.map(w => w.count));
+    const cloudEl = document.getElementById('cloud');
+    cloudEl.innerHTML = '';
+    words.forEach(w => {
+      const span = document.createElement('span');
+      span.className = 'word';
+      span.textContent = w.text;
+      span.style.fontSize = sizeFor(w.count, maxCount) + 'px';
+      cloudEl.appendChild(span);
+    });
+
+    // List: newest first
+    const listEl = document.getElementById('list');
+    listEl.innerHTML = '';
+    state.answers.slice().reverse().forEach(a => {
+      const div = document.createElement('div');
+      div.className = 'list-item';
+      div.textContent = a.text;
+      listEl.appendChild(div);
+    });
+  }
+
+  socket.on('state', render);
+
+  document.getElementById('viewCloudBtn').onclick = () => {
+    currentView = 'cloud';
+    document.getElementById('cloud').style.display = 'flex';
+    document.getElementById('list').style.display = 'none';
+    document.getElementById('viewCloudBtn').classList.add('active');
+    document.getElementById('viewListBtn').classList.remove('active');
+  };
+  document.getElementById('viewListBtn').onclick = () => {
+    currentView = 'list';
+    document.getElementById('cloud').style.display = 'none';
+    document.getElementById('list').style.display = 'flex';
+    document.getElementById('list').style.flexDirection = 'column';
+    document.getElementById('viewListBtn').classList.add('active');
+    document.getElementById('viewCloudBtn').classList.remove('active');
+  };
+
+  // Presenter passcode: asked once, remembered in this browser for convenience.
+  function getCode() {
+    let code = localStorage.getItem('presenterCode');
+    if (!code) {
+      code = prompt('Enter the presenter passcode to control this screen:') || '';
+      if (code) localStorage.setItem('presenterCode', code);
+    }
+    return code;
+  }
+  async function presenterPost(url, extra) {
+    const body = Object.assign({ code: getCode() }, extra || {});
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (res.status === 403) {
+      localStorage.removeItem('presenterCode'); // wrong code -- forget it so we re-ask
+      alert('Wrong presenter passcode. Click the button again to retry.');
+    }
+    return res;
+  }
+
+  document.getElementById('askBtn').onclick = async () => {
+    const q = document.getElementById('newQuestion').value.trim();
+    if (!q) return;
+    const res = await presenterPost('/api/question', { question: q });
+    if (res.ok) document.getElementById('newQuestion').value = '';
+  };
+  document.getElementById('stopBtn').onclick = () => presenterPost('/api/stop');
+  document.getElementById('clearBtn').onclick = () => presenterPost('/api/clear');
+
+  fetch('/api/state').then(r => r.json()).then(render);
+</script>
+</body>
+</html>
